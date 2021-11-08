@@ -2,6 +2,7 @@ package com.bd.airline.services;
 
 import com.bd.airline.model.*;
 import com.bd.airline.repositories.*;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class AirportServiceImpl implements AirportService {
+
 
     @Autowired
     private AirplaneRepository airplaneRepository;
@@ -29,12 +31,15 @@ public class AirportServiceImpl implements AirportService {
     @Override
     @Transactional
     public Flight createFlight(Flight flight) {
-        return this.flightRepository.save(flight);
+        Flight flight1 = this.flightRepository.save(flight);
+        flight.getAirplane().getFlights().add(flight);
+        this.airplaneRepository.save(flight.getAirplane());
+        return flight1;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Flight getFlightWithID(long id) {
+    public Flight getFlightWithID(ObjectId id) {
         Optional<Flight> flight = this.flightRepository.findById(id);
         return flight.orElse(null);
     }
@@ -58,8 +63,8 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     @Transactional(readOnly = true)
-    public Airplane getAirplaneWithID(long i) {
-        Optional<Airplane> airplane = this.airplaneRepository.findById(i);
+    public Airplane getAirplaneWithID(ObjectId id) {
+        Optional<Airplane> airplane = this.airplaneRepository.findById(id);
         return airplane.orElse(null);
     }
 
@@ -88,7 +93,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     @Transactional
-    public List<Flight> getFlightsByAirplaneID(long id) {
+    public List<Flight> getFlightsByAirplaneID(ObjectId id) {
         Optional<Airplane> airplane = this.airplaneRepository.findById(id);
         List<Flight> flights = airplane.isPresent() ? airplane.get().getFlights() : null;
         return flights;

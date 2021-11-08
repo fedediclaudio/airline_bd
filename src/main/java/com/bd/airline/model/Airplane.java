@@ -1,41 +1,44 @@
 package com.bd.airline.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "airplane") //Puedo especificar esquema, constraints, si utilizo indices
+@Document
 public class Airplane {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id_airplane")
-    private Long id;
+    @MongoId
+    @JsonSerialize(using= ToStringSerializer.class)
+    private ObjectId id;
 
-    @Column(name="mark", insertable = true, length = 50, nullable = false,
-            table = "airplane", updatable = true, unique = false)
+    @Field
     private String mark;
 
-    @Column(nullable = false)
+    @Field
     private String model;
 
-    @Column(nullable = false, updatable = false, unique = true)
+    @Field
     private String numberOfRegistration;
 
-    @Column
+    @Field
     private int yearsInService;
 
-    @Column(nullable = false)
+    @Field
     private int numberOfSeats;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "airplane", fetch = FetchType.LAZY, cascade = {}, orphanRemoval = false)
+    @DBRef
     private List<Flight> flights;
 
     @Version
-    @Column(name = "version")
     private int version;
 
     public Airplane(){
@@ -47,13 +50,14 @@ public class Airplane {
         this.numberOfRegistration = numberOfRegistration;
         this.yearsInService = yearsInService;
         this.numberOfSeats = numberOfSeats;
+        this.flights = new ArrayList<Flight>();
     }
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

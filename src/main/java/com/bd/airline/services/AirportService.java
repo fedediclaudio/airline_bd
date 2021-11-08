@@ -1,20 +1,16 @@
 package com.bd.airline.services;
 
 import com.bd.airline.model.*;
+import org.bson.types.ObjectId;
 
 import java.util.Date;
 import java.util.List;
 
 public interface AirportService {
 
-    /*
-    * Los siguientes metodos se utilizaron en la clase de ejemplo
-    * Son libres de modificacion para completar con la implementacion de la solucion
-     */
-
     Airplane createAirplane(Airplane airplane);
 
-    Airplane getAirplaneWithID(long i);
+    Airplane getAirplaneWithID(ObjectId id);
 
     Airplane updateAirplane(Airplane airplane);
 
@@ -22,7 +18,7 @@ public interface AirportService {
 
     Flight createFlight(Flight flight);
 
-    Flight getFlightWithID(long id);
+    Flight getFlightWithID(ObjectId id);
 
     Flight updateFlight(Flight flight);
 
@@ -30,7 +26,7 @@ public interface AirportService {
 
     Flight getFlightWithNumber(long number);
 
-    List<Flight> getFlightsByAirplaneID(long id);
+    List<Flight> getFlightsByAirplaneID(ObjectId id);
 
     /*
      * METODOS A IMPLEMENTAR

@@ -2,6 +2,7 @@ package com.bd.airline.controllers;
 
 import com.bd.airline.services.AirportService;
 import com.bd.airline.model.*;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +16,14 @@ public class AirlineController {
     @Autowired
     private AirportService service;
 
+
     @GetMapping(path = "/prueba")
     public String prueba() {
         return "OK!";
     }
 
     @GetMapping(path = "/airplanes/{id}")
-    public Airplane getAirplane(@PathVariable long id) {
+    public Airplane getAirplane(@PathVariable ObjectId id) {
         return this.service.getAirplaneWithID(id);
     }
 
@@ -31,7 +33,7 @@ public class AirlineController {
     }
 
     @PutMapping(path = "/airplanes/{id}")
-    public Airplane updateAirplane(@RequestBody Airplane airplane,@PathVariable long id){
+    public Airplane updateAirplane(@RequestBody Airplane airplane,@PathVariable ObjectId id){
         if(this.service.getAirplaneWithID(id) != null){
             return this.service.updateAirplane(airplane);
         }
@@ -39,12 +41,12 @@ public class AirlineController {
     }
 
     @DeleteMapping(path = "airplanes/{id}")
-    public boolean deleteAirplane(@PathVariable long id){
+    public boolean deleteAirplane(@PathVariable ObjectId id){
         return this.service.deleteAirplane(this.service.getAirplaneWithID(id));
     }
 
     @GetMapping(path = "/flights/{id}")
-    public Flight getFlight(@PathVariable long id) {
+    public Flight getFlight(@PathVariable ObjectId id) {
         return this.service.getFlightWithID(id);
     }
 
@@ -54,7 +56,7 @@ public class AirlineController {
     }
 
     @PutMapping(path = "/flights/{id}")
-    public Flight updateFlight(@RequestBody Flight flight, @PathVariable long id){
+    public Flight updateFlight(@RequestBody Flight flight, @PathVariable ObjectId id){
         if(this.service.getFlightWithID(id) != null) {
             return this.service.updateFlight(flight);
         }
@@ -62,7 +64,7 @@ public class AirlineController {
     }
 
     @DeleteMapping(path = "/flights/{id}")
-    public Object deleteFlight(@PathVariable long id){
+    public Object deleteFlight(@PathVariable ObjectId id){
         return this.service.deleteFlight(this.service.getFlightWithID(id));
     }
 
@@ -72,7 +74,7 @@ public class AirlineController {
     }
 
     @GetMapping(path = "airplanes/{id}/flights")
-    public List<Flight> getFlightsByAirplaneID(@PathVariable long id){
+    public List<Flight> getFlightsByAirplaneID(@PathVariable ObjectId id){
         return this.service.getFlightsByAirplaneID(id);
     }
 

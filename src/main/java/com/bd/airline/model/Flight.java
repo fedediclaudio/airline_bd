@@ -1,48 +1,53 @@
 package com.bd.airline.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.stereotype.Indexed;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "flight")
+@Document
 public class Flight {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_flight")
-    private Long id;
+    @MongoId
+    @JsonSerialize(using=ToStringSerializer.class)
+    private ObjectId id;
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @Field
     private Long number;
 
-    @Column(nullable = false)
+    @Field
     private Date dateOfFlight;
 
-    @Column(nullable = false)
+    @Field
     private float weightLimit;
 
-    @Column(nullable = false)
+    @Field
     private int reservedSeats;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {})
-    @JoinColumn(name = "id_airplane", nullable = false)
+    @DBRef
     private Airplane airplane;
 
-    @Transient //Esta anotacion indica que dicho atributo no se persiste. Se utiliza solo para este ejemplo.
+    @BsonIgnore
     private List<Reservation> reservations;
 
-    @Transient
+    @BsonIgnore
     private Route route;
 
-    @Transient
+    @BsonIgnore
     private Pilot pilot;
 
     @Version
-    @Column(name = "version")
     private int version;
 
     public Flight(){}
@@ -54,15 +59,14 @@ public class Flight {
         this.airplane = airplane;
         this.route = route;
         this.pilot = pilot;
-        this.reservations = new ArrayList<Reservation>();
         this.reservedSeats = 0;
     }
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
